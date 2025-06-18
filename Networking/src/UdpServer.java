@@ -3,9 +3,9 @@ import java.io.IOException;
 import java.net.*;
 public class UdpServer {
     public static void main(String[] args) throws IOException {
+        byte []data = new byte[1024];
         DatagramSocket socket = new DatagramSocket(9099);
-        byte data[] = new byte[1024];
-        DatagramPacket packet = new DatagramPacket((data), data.length);
+        DatagramPacket packet = new DatagramPacket(data, data.length);
         socket.receive(packet);
         String msg = new String(packet.getData(), 0, packet.getLength());
         System.out.println("message :"+msg);
