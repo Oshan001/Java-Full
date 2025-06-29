@@ -1,58 +1,54 @@
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
-import java.util.*;
+import java.util.Properties;
+
 public class Main {
-    public static void main(String[] args) throws Exception {
-        // Set properties
-        Properties pro = new Properties();
-        pro.put("mail.smtp.auth", "true");
-        pro.put("mail.smtp.starttls.enable", "true");
-        pro.put("mail.smtp.host", "smtp.gmail.com");  // Fixed spelling
-        pro.put("mail.smtp.port", "587");             // Fixed spelling
+    public static void main(String[] args) {
+        // Your Gmail address
+        final String username = "oshanbaj@gmail.com";
+        // Your Gmail App Password (16 chars, no spaces)
+        final String appPassword = "pghm cgfo syes qopi";
 
-        // Create a session with authentication
-        Session ses = Session.getInstance(pro, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("oshanbaj@gmail.com", "password");
-            }
-        });
+        // Recipient email address
+        String toEmail = "oshanbaj11@gmail.com";
 
-        // Compose the message
-        Message m = new MimeMessage(ses);
-        m.setFrom(new InternetAddress("oshanbaj@gmail.com"));
-        m.setRecipients(Message.RecipientType.TO, InternetAddress.parse("t@gmail.com"));
-        m.setSubject("Hello");
-        m.setText("message");
+        // SMTP server configuration
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
 
-        // Send the message
-        Transport.send(m);
-        System.out.println("Email Sent");
+        // Create session with authenticator
+        Session session = Session.getInstance(props,
+                new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, appPassword);
+                    }
+                }
+        );
+
+        // Enable debug output (optional)
+        session.setDebug(true);
+
+        try {
+            // Compose the message
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(toEmail)
+            );
+            message.setSubject("Test Email from Java");
+            message.setText("Hello! This is a test email sent from Java using Jakarta Mail.");
+
+            // Send the email
+            Transport.send(message);
+
+            System.out.println("Email sent successfully!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }
-
-//import jakarta.mail.*;
-//import jakarta.mail.internet.*;
-//import  java.util.*;
-//public class SendMailDemo {
-//    public static void main(String[] args)throws Exception {
-//        Properties pro = new Properties();
-//        pro.put("mail.smtp:auth",true);
-//        pro.put("mail.smtp:starttls.enable",true);
-//        pro.put("mail.smtp:hoost","smpt.gmail.com");
-//        pro.put("mail.smpt.port",587);
-//        Session ses = Session.getInstance(pro,new Authenticator(){
-//            protected PassswordAutentication getPasswordAuthencation()
-//            {
-//                return new PasswordAuthentication("a@gamil.com",password);
-//            }
-//        });
-//        Message = new Message(ses);
-//        m.setFrom(new InternetAddress("a@gamil.com"));
-//        m.setRecePients(Message.recepidentsType,TO,Internet Adderss.parse("t@gmail.com"));
-//        m.setSubject("hello");
-//        m.setText("message");
-//        Transport.send(m);
-//        System.out.println("Email Sent");
-//
-//    }
-//}

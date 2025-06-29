@@ -23,56 +23,44 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-
 public class LabJdbc extends JFrame implements ActionListener {
     JTextField idField, nameField, emailField;
     JPasswordField passwordField;
     JButton button;
-
     public LabJdbc() {
         setTitle("User Registration Form");
         setLayout(new FlowLayout());
         setSize(300, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         add(new JLabel("ID:"));
         idField = new JTextField(15);
         add(idField);
-
         add(new JLabel("Name:"));
         nameField = new JTextField(15);
         add(nameField);
-
         add(new JLabel("Email:"));
         emailField = new JTextField(15);
         add(emailField);
-
         add(new JLabel("Password:"));
         passwordField = new JPasswordField(15);
         add(passwordField);
-
         button = new JButton("Submit");
         add(button);
         button.addActionListener(this);
-
         setVisible(true);
     }
-
     public void actionPerformed(ActionEvent e) {
         String id = idField.getText();
         String name = nameField.getText();
         String email = emailField.getText();
         String password = new String(passwordField.getPassword());
-
         if (id.isEmpty() || name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "All fields are required!");
             return;
         }
-
         try {
             insertData(id, name, email, password);
             JOptionPane.showMessageDialog(this, "Data inserted successfully!");
-
             // Clear fields
             idField.setText("");
             nameField.setText("");
@@ -82,7 +70,6 @@ public class LabJdbc extends JFrame implements ActionListener {
             throw new RuntimeException(ex);
         }
     }
-
     public void insertData(String id, String name, String email, String password) throws Exception {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection(
@@ -98,9 +85,9 @@ public class LabJdbc extends JFrame implements ActionListener {
         pre.close();
         con.close();
     }
-
     public static void main(String[] args) {
         new LabJdbc();
     }
 }
+
 
