@@ -891,3 +891,227 @@ These are built-in objects you can use directly in any JSP file.
 | `page`          | `Object`               | Refers to the current JSP page instance (similar to `this` in Java)          | Page         |
 | `pageContext`   | `PageContext`          | Provides access to all JSP implicit objects and scoped variables             | Page         |
 
+---![temp.jpg](temp.jpg)
+![Questions](D:\Cosmos\LAB_code\Sem_4\Java\Ch6 Servlet and JSP/![temp.jpg](temp.jpg))
+
+```tree
+YourProject/
+├── src/
+│   └── your/package/name/
+│       └── FormHandler.java
+├── WebContent/ or webapp/
+│   └── form.html
+│   └── WEB-INF/
+│       └── web.xml (optional if using annotation)
+```
+
+
+```html
+<!--form-->
+<html>
+<head>
+  <title>Simple Form</title>
+</head>
+<body>
+<form method="post" action="input.jsp">
+  <!-- Name field -->
+  Name: <input type="text" name="name"><br><br>
+
+  <!-- Gender radio buttons -->
+  Gender:
+  <input type="radio" name="gender" value="F"> Female
+  <input type="radio" name="gender" value="M"> Male<br><br>
+
+  <!-- Course checkbox -->
+  Course:
+  <input type="checkbox" name="course" value="C++"> C++<br><br>
+
+  <!-- Time dropdown -->
+  Time:
+  <select name="time">
+    <option value="morning">Morning</option>
+    <option value="afternoon">Afternoon</option>
+    <option value="evening">Evening</option>
+  </select><br><br>
+
+  <!-- Submit button -->
+  <input type="submit" value="Submit">
+</form>
+</body>
+</html>
+```
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+@WebServlet("/FormHandler")
+public class FormHandler extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String name = request.getParameter("name");
+        String gender = request.getParameter("gender");
+        String time = request.getParameter("time");
+        String[] courses = request.getParameterValues("course");
+
+        out.println("<html><body>");
+        out.println("<h1>Your Information</h1>");
+        out.println("Name: " + name + "<br>");
+        out.println("Gender: " + gender + "<br>");
+        out.println("Time: " + time + "<br>");
+
+        out.println("<h3>Courses:</h3>");
+        if (courses != null) {
+            out.println("<ul>");
+            for (String c : courses) {
+                out.println("<li>" + c + "</li>");
+            }
+            out.println("</ul>");
+        } else {
+            out.println("No course selected.");
+        }
+
+        out.println("<br><a href='form.html'>Go Back</a>");
+        out.println("</body></html>");
+    }
+}
+```
+## input jsp
+```html
+<%
+// Retrieve form parameters
+String name = request.getParameter("name");
+String gender = request.getParameter("gender");
+String time = request.getParameter("time");
+String course[] = request.getParameterValues("course"); // Corrected: parameter name & method
+%>
+
+<h1>Your Information</h1>
+Name: <%= name %> <br>
+Gender: <%= gender %> <br>
+Time: <%= time %> <br>
+
+<% if (course != null) { %>
+<ul>
+  <% for(String c : course) { %>
+  <li><%= c %></li>
+  <% } %>
+</ul>
+<% } else { %>
+No course selected.
+<% } %>
+```
+---
+
+---
+## Session
+
+```html
+<!--login-->
+
+<html>
+<head>
+  <title>Login Page</title>
+</head>
+<body>
+<h2>Login</h2>
+<form method="post" action="logincheck.jsp">
+  Username: <input type="text" name="user"><br><br>
+  Password: <input type="password" name="pass"><br><br>
+  <input type="submit" value="Login">
+</form>
+</body>
+</html>
+
+
+```html
+<%
+<%@ page language="java" %>
+String name = request.getParameter("user");
+String pwd = request.getParameter("pass");
+
+if (name.equals("cosmos") && pwd.equals("cosmos")) {
+session.setAttribute("NAME", name);
+%>
+<h2>Login successful!</h2>
+<p>Welcome, <%= name %></p>
+<%
+} else {
+%>
+<h2>Login failed!</h2>
+<p>Invalid username or password.</p>
+<%
+}
+%>
+<%String name =(String)session.getAttribute("NAME")
+%> 
+<h1>Hello,<%=name%> </h1>
+```
+---
+---
+## Cookie
+* To store small  information on a client machine
+* To tack user
+
+```java 
+//        Name<------------|       |--------->value
+Cookie cook = new Cookie(String,String);
+getValue();
+getName();
+setMaxAge(long);
+//to add cookie:
+  response.addcookie(cook);
+```
+---
+```
+* cook.html
+```html
+<html>
+<body>
+<form method="get" action="setCookie.jsp">
+  Name: <input type="text" name="name"><br>
+  <input type="submit" value="Submit">
+</form>
+</body>
+</html>
+
+```
+* setCookie.jsp
+```html
+<%
+String name = request.getParameter("name");
+Cookie cook = new Cookie("NAME", name);
+response.addCookie(cook);
+out.println("Cookie added successfully.");
+%>
+<br>
+<a href="getCookie.jsp">Get Cookie</a>
+
+```
+* getcookie.jsp
+```html
+<%
+Cookie cooks[] = request.getCookies();
+if (cooks != null) {
+for (Cookie c : cooks) {
+if (c.getName().equals("NAME")) {
+String v =c.getValue();
+out.println("Cookie Value: " + v);
+break;
+}
+}
+} else {
+out.println("No cookies found.");
+}
+%>
+```
+---
+
+
+---
