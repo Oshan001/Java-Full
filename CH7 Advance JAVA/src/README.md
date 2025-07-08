@@ -120,28 +120,29 @@ ii.By implementing Runnable interface
 | **6. Terminated** | Thread finishes execution or is stopped by error.                   |  Happens automatically at end of `run()` or due to exception |
 
 ```java
-class ThreadDemo implements Runnable 
-{
+class ThreadDemo implements Runnable {
     Thread t;
 
     ThreadDemo() {
         t = new Thread(this);
-        dt.start();
+        t.start(); // Fixed: dt -> t
     }
 
     public void run() {
         for (int i = 0; i < 10; i++) {
-            System.out.println("Hello" + i);
+            System.out.println("Hello " + i);
             try {
-                t.sleep(100);
-            } catch (Exception e) {}
+                Thread.sleep(100); // Fixed: Thread.sleep instead of t.sleep
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
         }
     }
 
     public static void main(String[] args) {
         ThreadDemo obj = new ThreadDemo();
         ThreadDemo obj1 = new ThreadDemo();
-    } 
+    }
 }
 ```
 ## Synchronization
@@ -161,42 +162,40 @@ class BankAccount
     public synchronized void withdraw(String n,int amt) {
         if (Balance >= amt) {
             System.out.println("Withdraw Success by :" + n);
-            try { 
-                Thread.sleep(1000); 
-            } 
+            try {
+                Thread.sleep(1000);
+            }
             catch (Exception e) { }
             Balance -= amt;
-        } 
-        else 
-        { 
-            System.out.println("Balance not Enough"); 
+        }
+        else
+        {
+            System.out.println("Balance not Enough");
         }
     }
 }
 ```
 eg:
 ```java
-class Bankwithdraw extends Thread
-{
+class Bankwithdraw extends Thread {
     BankAccount acc;
     String name;
     int amt;
-    Bankwithdraw(BankAccount acc,int amat,String n)
-    {
-        this.acc =acc;
-        this.name=n;
-        this.amt = a;
+
+    Bankwithdraw(BankAccount acc, int amt, String name) {
+        this.acc = acc;
+        this.name = name;
+        this.amt = amt; // Corrected from 'a' to 'amt'
     }
-    public void run()
-    {
-        acc.withdraw(n,amt);
+
+    public void run() {
+        acc.withdraw(name, amt); // Corrected 'n' to 'name'
     }
-    
 }
 ```
 eg:
 ```java
-class caller
+class Caller
 {
     public static void main(String[] args) {
         BankAccount ac = new BankAccount();
