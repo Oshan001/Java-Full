@@ -210,3 +210,138 @@ class caller
 ---
 
 ---
+## Design Patten
+* Design patterns are proven reusable solution for common problems in Solution design <br>
+<u>Types (Creational):</u>
+
+| Pattern Name       | Purpose                                                                         |
+|--------------------|---------------------------------------------------------------------------------|
+| `Singleton`        | Ensures only one instance of a class is created and provides global access.     |
+| `Factory`          | Creates objects without exposing the instantiation logic.                       |
+| `Abstract Factory` | Produces families of related objects without specifying concrete classes.       |
+
+#### Example code :
+1)Singleton :
+![a](Singleton.png)
+Singleton is a design pattern that ensures only one object of a class is created and used everywhere.
+Example:
+Like a TV remote — you only need one remote to control the TV. You don’t create a new one every time.
+```java
+public class Singleton {
+    private static Singleton instance;
+
+    private Singleton() {
+        // private constructor
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+
+class Caller {
+    public static void main(String[] args) {
+        Singleton obj = Singleton.getInstance();   //  Correct method call
+        Singleton obj1 = Singleton.getInstance();  //  Same instance as above
+
+        // Let's check if both are the same object
+        if (obj == obj1) {
+            System.out.println("Both are the same instance");
+        } else {
+            System.out.println("Different instances");
+        }
+    }
+}
+
+
+```
+2)Factory :
+![a](Factory.jpg)
+Factory pattern is used to create objects without showing the creation logic to the user.
+You just tell the factory what you want, and it gives the right object.
+Example:
+☕ Like ordering a drink from a machine:
+You press "Coffee" → it gives coffee.
+You press "Tea" → it gives tea.
+You don’t know how it’s made — just what you want.
+```java
+interface Animal {
+    void speak();
+}
+
+class Dog implements Animal {
+    public void speak() {
+        System.out.println("Woof!");
+    }
+}
+
+class Cat implements Animal {
+    public void speak() {
+        System.out.println("Meow!");
+    }
+}
+
+class AnimalFactory {
+    public static Animal getAnimal(String type) {
+        if ("Dog".equalsIgnoreCase(type)) return new Dog();
+        else if ("Cat".equalsIgnoreCase(type)) return new Cat();
+        return null;
+    }
+}
+```
+<u>Usage :</u>
+```java
+Animal animal = AnimalFactory.getAnimal("Dog");
+animal.speak(); // Output: Woof!
+```
+3)Abstract Factory :
+Abstract Factory pattern provides a way to create a set of related objects (a family) without knowing their exact classes.
+
+Example:
+🏭 Like choosing a furniture factory:
+You say "Give me Modern furniture" → it gives a Modern chair and table.
+Or "Give me Victorian furniture" → you get a Victorian chair and table.
+You don’t pick items one by one — the factory gives a whole set based on the style.
+```java
+// Abstract Products
+interface Button {
+    void paint();
+}
+
+interface Checkbox {
+    void render();
+}
+
+// Concrete Products for Windows
+class WindowsButton implements Button {
+    public void paint() {
+        System.out.println("Render a Windows Button");
+    }
+}
+
+class WindowsCheckbox implements Checkbox {
+    public void render() {
+        System.out.println("Render a Windows Checkbox");
+    }
+}
+
+// Abstract Factory
+interface GUIFactory {
+    Button createButton();
+    Checkbox createCheckbox();
+}
+
+// Concrete Factory for Windows
+class WindowsFactory implements GUIFactory {
+    public Button createButton() {
+        return new WindowsButton();
+    }
+
+    public Checkbox createCheckbox() {
+        return new WindowsCheckbox();
+    }
+}
+```
